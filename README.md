@@ -1,4 +1,4 @@
-# git-game: The committer guessing game
+# The git committer guessing game!
 
 ## What is it?
 
