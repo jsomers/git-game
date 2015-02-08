@@ -11,7 +11,7 @@ The goal is to get the longest streak! (It's harder than you think...)
 ## How do I play?
 
 - Download the `git-game` executable
-- Put it somewhere on your PATH
+- Put it somewhere on your PATH (like /usr/local/bin)
 - Then, in any git repository, run `git game`
 
 ## Requirements
