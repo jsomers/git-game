@@ -1,0 +1,73 @@
+#!/usr/bin/ruby
+
+# -- Parse commits --
+COMMIT_DELIMITER = "XXXCOMMITXXX"
+FIELD_DELIMITER = "|||"
+
+commit_format = ["%an", "%ar", "%B"].join(FIELD_DELIMITER)
+raw_commits = `git log --no-merges --pretty="#{COMMIT_DELIMITER}#{commit_format}"`.split("#{COMMIT_DELIMITER}")
+
+commits = []
+raw_commits.each do |c|
+  next if c.strip.empty?
+
+  fields = c.split(FIELD_DELIMITER)
+  commits << {:author => fields[0], :date => fields[1], :message => fields[2]}
+end
+
+committers = commits.map { |c| c[:author] }.compact.uniq
+
+# -- Show welcome message --
+system('clear')
+
+puts "----------------------------------------------------------"
+puts "                      THE GIT GAME                        "
+puts "----------------------------------------------------------"
+puts "Welcome! The goal of the git game is to guess committers"
+puts "based on their commit messages.\n\n"
+
+puts "You're playing in a repo with #{commits.size} commits and #{committers.size}"
+puts "distinct committers.\n\n"
+
+committers.each do |committer|
+  puts committer
+end
+
+puts "\n"
+puts "When guessing, all you have to do is type part of the"
+puts "committer's name. It's case-insensitive. So for instance"
+puts "if the committer was James Somers, you could write 'james'"
+puts "or 'jam' or even 'j' to get full credit.\n\n"
+
+puts "Ready? PRESS ANY KEY TO START PLAYING"
+
+gets
+
+system('clear')
+
+# -- Game loop --
+streak = 0
+
+while true
+  commit = commits.shuffle.pop
+  message = commit[:message]
+  author = commit[:author]
+  
+  next if message.nil? || message.empty? || author.nil? || author.empty?
+
+  puts "(#{commit[:date]})\n"
+  puts "#{message.strip}\n\n"
+  print "Who wrote it (current streak: #{streak})? "
+  guess = gets
+
+  if author.downcase.include?(guess.strip.downcase) && !guess.strip.empty?
+    streak += 1
+    puts "Got it!"
+  else
+    streak = 0
+    puts "Actually, it was #{author}."
+  end
+
+  sleep 1
+  system('clear')
+end
