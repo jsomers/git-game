@@ -18,6 +18,6 @@ The goal is to get the longest streak! (It's harder than you think...)
 
 - Requires Ruby >1.8
 
-## "I can't get it to work", "It would be cool if you could...", blah blah
+## "I can't get it to work", "It would be cool if you could...", etc.
 
-Patches welcome!
+Pull requests welcome!
