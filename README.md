@@ -10,7 +10,7 @@ The goal is to get the longest streak! (It's harder than you think...)
 
 ## How do I play?
 
-- Download the `git-game` executable
+- [Download the `git-game` executable](https://github.com/jsomers/git-game/releases/tag/1.0)
 - Put it somewhere on your PATH (like /usr/local/bin)
 - Then, in any git repository, run `git game`
 
