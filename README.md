@@ -2,10 +2,9 @@
 
 ## What is it?
 
-In the git game, you  guess who made a commit to your team's repo based on their commit message.
+In the git game, you  guess who made a commit to your team's repo based on their commit message:
 
-![](https://cloud.githubusercontent.com/assets/21294/6098459/7f4274ae-afad-11e4-9e30-c5ae631ff744.png)
-
+![](https://cloud.githubusercontent.com/assets/21294/6098511/fb347c1e-afae-11e4-9152-5a132a10c3b3.png)
 The goal is to get the longest streak! (It's harder than you think...)
 
 ## How do I play?
