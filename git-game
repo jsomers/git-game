@@ -58,7 +58,13 @@ while true
   puts "(#{commit[:date]})\n"
   puts "#{message.strip}\n\n"
   print "Who wrote it (current streak: #{streak})? "
+  
   guess = gets
+  
+  while guess.strip.empty?
+    print "Who wrote it (current streak: #{streak})? "
+    guess = gets
+  end
 
   if author.downcase.include?(guess.strip.downcase) && !guess.strip.empty?
     streak += 1
