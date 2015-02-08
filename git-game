@@ -1,5 +1,11 @@
 #!/usr/bin/ruby
 
+# -- Exit gracefully --
+Signal.trap("INT") {
+  print "bye "
+  exit 0
+}
+
 # -- Parse commits --
 COMMIT_DELIMITER = "XXXCOMMITXXX"
 FIELD_DELIMITER = "|||"
@@ -39,7 +45,7 @@ puts "committer's name. It's case-insensitive. So for instance"
 puts "if the committer was James Somers, you could write 'james'"
 puts "or 'jam' or even 'j' to get full credit.\n\n"
 
-puts "Ready? PRESS ANY KEY TO START PLAYING"
+puts "Ready? PRESS ANY KEY TO START PLAYING (Ctrl-C to quit)"
 
 gets
 
