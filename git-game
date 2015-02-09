@@ -54,7 +54,7 @@ system('clear')
 # -- Game loop --
 streak = 0
 
-while true
+loop do
   commit = commits.shuffle.pop
   message = commit[:message]
   author = commit[:author]
