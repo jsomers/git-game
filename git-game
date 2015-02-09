@@ -58,15 +58,15 @@ loop do
   commit = commits.shuffle.pop
   message = commit[:message]
   author = commit[:author]
-  
+
   next if message.nil? || message.empty? || author.nil? || author.empty?
 
   puts "(#{commit[:date]})\n"
   puts "#{message.strip}\n\n"
   print "Who wrote it (current streak: #{streak})? "
-  
+
   guess = gets
-  
+
   while guess.strip.empty?
     print "Who wrote it (current streak: #{streak})? "
     guess = gets
