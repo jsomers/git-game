@@ -92,7 +92,7 @@ loop do
     guess = gets
   end
 
-  if author.downcase.include?(guess.strip.downcase) && !guess.strip.empty?
+  if author.downcase.eql?(guess.strip.downcase) && !guess.strip.empty?
     streak += 1
     puts "Got it!"
   else
