@@ -6,13 +6,39 @@ Signal.trap("INT") {
   exit 0
 }
 
+def print_header
+  puts "----------------------------------------------------------"
+  puts "                      THE GIT GAME                        "
+  puts "----------------------------------------------------------"
+  puts "Welcome! The goal of the git game is to guess committers"
+  puts "based on their commit messages.\n\n"
+end
+
+def print_help
+  puts "----------------------------------------------------------"
+  puts "                          USAGE                           "
+  puts "----------------------------------------------------------"
+  puts "ruby git-game [extra git log options]"
+  puts "EX: ruby git-game --after={2014-08-08}"
+  puts "This script already uses --no-merges and --pretty."
+  puts "For more valid options see: http://gitref.org/inspect/"
+end
+
+# -- Usage Text --
+if ARGV.count > 0 && (input = ARGV.shift) == 'help'
+  print_header
+  print_help
+  exit 0
+end
+
 # -- Parse commits --
 COMMIT_DELIMITER = "XXXCOMMITXXX"
 FIELD_DELIMITER = "|||"
 
 commit_format = ["%an", "%ar", "%B"].join(FIELD_DELIMITER)
-raw_commits = `git log --no-merges --pretty="#{COMMIT_DELIMITER}#{commit_format}"`.split("#{COMMIT_DELIMITER}")
 
+raw_commits = `git log --no-merges --pretty="#{COMMIT_DELIMITER}#{commit_format}" #{input if input}`.split("#{COMMIT_DELIMITER}")
+puts raw_commits.count
 commits = []
 raw_commits.each do |c|
   next if c.strip.empty?
@@ -26,12 +52,7 @@ committers = commits.map { |c| c[:author] }.compact.uniq
 # -- Show welcome message --
 system('clear')
 
-puts "----------------------------------------------------------"
-puts "                      THE GIT GAME                        "
-puts "----------------------------------------------------------"
-puts "Welcome! The goal of the git game is to guess committers"
-puts "based on their commit messages.\n\n"
-
+print_header
 puts "You're playing in a repo with #{commits.size} commits and #{committers.size}"
 puts "distinct committers.\n\n"
 
