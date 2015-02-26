@@ -94,7 +94,7 @@ loop do
 
   if author.downcase.include?(guess.strip.downcase) && !guess.strip.empty?
     streak += 1
-    puts "Got it!"
+    puts "Got it! (it was #{author})"
   else
     streak = 0
     puts "Actually, it was #{author}."
