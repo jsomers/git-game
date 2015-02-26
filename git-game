@@ -18,10 +18,10 @@ def print_help
   puts "----------------------------------------------------------"
   puts "                          USAGE                           "
   puts "----------------------------------------------------------"
-  puts "ruby git-game [extra git log options]"
-  puts "EX: ruby git-game --after={2014-08-08}"
-  puts "This script already uses --no-merges and --pretty."
-  puts "For more valid options see: http://gitref.org/inspect/"
+  puts "git game [extra git log options]"
+  puts "EX: git game --after={2014-08-08}"
+  puts "(This script already uses --no-merges and --pretty."
+  puts "For more valid options see: http://gitref.org/inspect/)"
 end
 
 # -- Usage Text --
