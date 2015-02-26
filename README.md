@@ -10,10 +10,14 @@ The goal is to get the longest streak! (It's harder than you think...)
 
 ## How do I play?
 
-- [Download the `git-game` executable](https://github.com/jsomers/git-game/releases/tag/1.1)
-- Put it somewhere on your PATH (like /usr/local/bin)
+- `gem install git-game` (or perform [manual installation](#manual-installation).
 - Then, in any git repository, run `git game`
 - (If you'd like, you can select a subset of commits, for example, `git game --after={2014-08-08}`. For more options, see [http://gitref.org/inspect/](http://gitref.org/inspect/).)
+
+### Manual Installation
+
+- [Download the `git-game` executable](https://github.com/jsomers/git-game/releases/tag/1.1)
+- Put it somewhere on your PATH (like /usr/local/bin)
 
 ## Requirements
 
