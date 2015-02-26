@@ -5,7 +5,6 @@ longest_streak = streak = 0
 # -- Exit gracefully --
 Signal.trap("INT") {
   puts "\nLongest streak: #{longest_streak}"
-  print "bye "
   exit 0
 }
 
