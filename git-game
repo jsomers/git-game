@@ -2,33 +2,33 @@
 
 # -- Exit gracefully --
 Signal.trap("INT") {
-  print "bye "
-  exit 0
+	print "bye "
+	exit 0
 }
 
 def print_header
-  puts "----------------------------------------------------------"
-  puts "                      THE GIT GAME                        "
-  puts "----------------------------------------------------------"
-  puts "Welcome! The goal of the git game is to guess committers"
-  puts "based on their commit messages.\n\n"
+	puts "----------------------------------------------------------"
+	puts "                      THE GIT GAME                        "
+	puts "----------------------------------------------------------"
+	puts "Welcome! The goal of the git game is to guess committers"
+	puts "based on their commit messages.\n\n"
 end
 
 def print_help
-  puts "----------------------------------------------------------"
-  puts "                          USAGE                           "
-  puts "----------------------------------------------------------"
-  puts "git game [extra git log options]"
-  puts "EX: git game --after={2014-08-08}"
-  puts "(This script already uses --no-merges and --pretty."
-  puts "For more valid options see: http://gitref.org/inspect/)"
+	puts "----------------------------------------------------------"
+	puts "                          USAGE                           "
+	puts "----------------------------------------------------------"
+	puts "git game [extra git log options]"
+	puts "EX: git game --after={2014-08-08}"
+	puts "(This script already uses --no-merges and --pretty."
+	puts "For more valid options see: http://gitref.org/inspect/)"
 end
 
 # -- Usage Text --
 if ARGV.count > 0 && (input = ARGV.shift) == 'help'
-  print_header
-  print_help
-  exit 0
+	print_header
+	print_help
+	exit 0
 end
 
 # -- Parse commits --
@@ -40,10 +40,10 @@ commit_format = ["%an", "%ar", "%B"].join(FIELD_DELIMITER)
 raw_commits = `git log --no-merges --pretty="#{COMMIT_DELIMITER}#{commit_format}" #{input if input}`.split("#{COMMIT_DELIMITER}")
 commits = []
 raw_commits.each do |c|
-  next if c.strip.empty?
+	next if c.strip.empty?
 
-  fields = c.split(FIELD_DELIMITER)
-  commits << {:author => fields[0], :date => fields[1], :message => fields[2]}
+	fields = c.split(FIELD_DELIMITER)
+	commits << {:author => fields[0], :date => fields[1], :message => fields[2]}
 end
 
 committers = commits.map { |c| c[:author] }.compact.uniq
@@ -56,7 +56,7 @@ puts "You're playing in a repo with #{commits.size} commits and #{committers.siz
 puts "distinct committers.\n\n"
 
 committers.each do |committer|
-  puts committer
+	puts committer
 end
 
 puts "\n"
@@ -73,33 +73,35 @@ system('clear')
 
 # -- Game loop --
 streak = 0
+best = 0
 
 loop do
-  commit = commits.shuffle.pop
-  message = commit[:message]
-  author = commit[:author]
+	commit = commits.shuffle.pop
+	message = commit[:message]
+	author = commit[:author]
 
-  next if message.nil? || message.empty? || author.nil? || author.empty?
+	next if message.nil? || message.empty? || author.nil? || author.empty?
 
-  puts "(#{commit[:date]})\n"
-  puts "#{message.strip}\n\n"
-  print "Who wrote it (current streak: #{streak})? "
+	puts "(#{commit[:date]})\n"
+	puts "#{message.strip}\n\n"
+	print "Who wrote it (best: #{best}, current streak: #{streak})? "
 
-  guess = gets
+	guess = gets
 
-  while guess.strip.empty?
-    print "Who wrote it (current streak: #{streak})? "
-    guess = gets
-  end
+	while guess.strip.empty?
+		print "Who wrote it (best: #{best}, current streak: #{streak})? "
+		guess = gets
+	end
 
-  if author.downcase.include?(guess.strip.downcase) && !guess.strip.empty?
-    streak += 1
-    puts "Got it!"
-  else
-    streak = 0
-    puts "Actually, it was #{author}."
-  end
+	if author.downcase.include?(guess.strip.downcase) && !guess.strip.empty?
+		streak += 1
+		best += 1
+		puts "Got it!"
+	else
+		streak = 0
+		puts "Actually, it was #{author}."
+	end
 
-  sleep 1
-  system('clear')
+	sleep 1
+	system('clear')
 end
