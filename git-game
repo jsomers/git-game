@@ -87,7 +87,12 @@ loop do
 
   guess = gets
 
-  while guess.strip.empty?
+  while guess.strip.empty? || !committers.map { |c| c.downcase.start_with?(guess.strip.downcase) }.any?
+    if guess.strip.empty?
+      print "Guess was empty, try again\n"
+    elsif !committers.map { |c| c.downcase.start_with?(guess.strip.downcase) }.any?
+      print "'#{guess.strip}' didn't exist in committers: #{committers.join(", ")}\n"
+    end
     print "Who wrote it (current streak: #{streak})? "
     guess = gets
   end
