@@ -1,8 +1,12 @@
 #!/usr/bin/ruby
-
+committer_stats = {}
 # -- Exit gracefully --
 Signal.trap("INT") {
-  print "bye "
+  puts "\n\nHow well do you know your teammates?\n"
+  committer_stats.each do |committer, stat|
+    puts "For #{committer} you got #{stat[:num_correct]} out of #{stat[:num_guesses]} \n"
+  end
+  print "bye\n"
   exit 0
 }
 
@@ -57,6 +61,7 @@ puts "distinct committers.\n\n"
 
 committers.each do |committer|
   puts committer
+  committer_stats[committer] = {num_correct: 0, num_guesses: 0}
 end
 
 puts "\n"
@@ -95,10 +100,12 @@ loop do
   if author.downcase.include?(guess.strip.downcase) && !guess.strip.empty?
     streak += 1
     puts "Got it!"
+    committer_stats[author][:num_correct] += 1
   else
     streak = 0
     puts "Actually, it was #{author}."
   end
+  committer_stats[author][:num_guesses] += 1
 
   sleep 1
   system('clear')
