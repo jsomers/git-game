@@ -13,6 +13,7 @@ The goal is to get the longest streak! (It's harder than you think...)
 - [Download the `git-game` executable](https://github.com/jsomers/git-game/releases/tag/1.0)
 - Put it somewhere on your PATH (like /usr/local/bin)
 - Then, in any git repository, run `git game`
+- (If you'd like, you can select a subset of commits, for example, `git game --after={2014-08-08}`. For more options, see [http://gitref.org/inspect/](http://gitref.org/inspect/).)
 
 ## Requirements
 
