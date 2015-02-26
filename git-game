@@ -48,9 +48,6 @@ end
 
 committers = commits.map { |c| c[:author] }.compact.uniq
 
-# -- List authors
-authors = `git log --format='%an' | sort -u`.split("\n")
-
 # -- Show welcome message --
 system('clear')
 
@@ -89,7 +86,7 @@ loop do
   puts "#{message.strip}\n\n"
   puts
 
-  choices = authors.sample(NUM_CHOICE)
+  choices = committers.sample(NUM_CHOICE)
   if not choices.include? author
     choices.pop
     choices.push author
