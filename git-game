@@ -56,9 +56,21 @@ end
 
 committers = commits.map { |c| c[:author] }.compact.uniq
 
-committer_options = committers.each_with_index.map do |committer, i|
-  "#{i+1}) #{committer}"
-end.join("\n")
+# committer_options = committers.each_with_index.map do |committer, i|
+#   "#{i+1}) #{committer}"
+# end.join("\n")
+
+def create_choices(author, committers)
+  choices = committers.sample(5)
+  choices[1] = author unless choices.include?(author)
+  choices.sort
+end
+
+def get_multiple(choices)
+  choices.each_with_index.map do |committer, i|
+    "#{i+1}) #{committer}"
+  end.join("\n")
+end
 
 # -- Show welcome message --
 system('clear')
@@ -67,7 +79,6 @@ puts header
 puts "You're playing in a repo with #{commits.size} commits "
 puts "and #{committers.size} distinct committers.\n\n"
 
-puts "#{committer_options}\n\n"
 puts "When guessing, all you have to do is type the number of the committer\n\n"
 
 puts "Ready? PRESS ENTER TO START PLAYING (Ctrl-C to quit anytime)"
@@ -84,24 +95,26 @@ loop do
   message = commit[:message]
   author = commit[:author]
 
+  choices = create_choices(author, committers)
+
   next if message.nil? || message.empty? || author.nil? || author.empty?
 
   puts "(#{commit[:date]})\n"
   puts "#{message.strip}\n\n"
 
   puts "Who wrote it (current streak: #{streak})? "
-  puts committer_options
+  puts get_multiple(choices)
 
   print prompt
 
   option = gets
-  until (option =~ /^[0-9]+$/) && (option.to_i <= committers.size)
+  until (option =~ /^[0-9]+$/) && (option.to_i.between?(1, choices.size))
     puts "Enter a valid number for the option"
     print prompt
     option = gets
   end
 
-  guess = committers[option.to_i-1]
+  guess = choices[option.to_i-1]
 
   if author == guess
     streak += 1
