@@ -59,7 +59,7 @@ committers.each do |committer|
   puts committer
 end
 
-puts "Ready? PRESS ANY KEY TO START PLAYING (Ctrl-C to quit)"
+puts "Ready? PRESS ENTER TO START PLAYING (Ctrl-C to quit)"
 
 gets
 
