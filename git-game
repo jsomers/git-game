@@ -81,23 +81,23 @@ loop do
   puts
 
   choices = committers.sample(NUM_CHOICE)
-  if not choices.include? author
+  if !choices.include?(author)
     choices.pop
     choices.push author
   end
   choices.shuffle!
 
-  choices.each_with_index {|name, index|
+  choices.each_with_index do |name, index|
     puts "[#{index + 1}] #{name}"
-  }
+  end
 
   print "Who wrote it (current streak: #{streak})? "
 
-  guess = gets.strip!
+  guess = gets.strip
 
-  while guess.empty? || not( guess.to_i.between?(1, NUM_CHOICE) )
+  while guess.empty? || !guess.to_i.between?(1, NUM_CHOICE)
     print "Who wrote it (current streak: #{streak})? "
-    guess = gets.strip!
+    guess = gets.strip
   end
 
   if choices[guess.to_i - 1] == author
