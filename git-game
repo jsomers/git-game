@@ -59,19 +59,14 @@ committers.each do |committer|
   puts committer
 end
 
-puts "\n"
-puts "When guessing, all you have to do is type part of the"
-puts "committer's name. It's case-insensitive. So for instance"
-puts "if the committer was James Somers, you could write 'james'"
-puts "or 'jam' or even 'j' to get full credit.\n\n"
-
-puts "Ready? PRESS ANY KEY TO START PLAYING (Ctrl-C to quit)"
+puts "Ready? PRESS ENTER TO START PLAYING (Ctrl-C to quit)"
 
 gets
 
 system('clear')
 
 # -- Game loop --
+NUM_CHOICE = 4
 streak = 0
 
 loop do
@@ -83,16 +78,29 @@ loop do
 
   puts "(#{commit[:date]})\n"
   puts "#{message.strip}\n\n"
-  print "Who wrote it (current streak: #{streak})? "
+  puts
 
-  guess = gets
+  choices = committers.sample(NUM_CHOICE)
+  if !choices.include?(author)
+    choices.pop
+    choices.push author
+  end
+  choices.shuffle!
 
-  while guess.strip.empty?
-    print "Who wrote it (current streak: #{streak})? "
-    guess = gets
+  choices.each_with_index do |name, index|
+    puts "[#{index + 1}] #{name}"
   end
 
-  if author.downcase.include?(guess.strip.downcase)
+  print "Who wrote it (current streak: #{streak})? "
+
+  guess = gets.strip
+
+  while guess.empty? || !guess.to_i.between?(1, NUM_CHOICE)
+    print "Who wrote it (current streak: #{streak})? "
+    guess = gets.strip
+  end
+
+  if choices[guess.to_i - 1] == author
     streak += 1
     puts "Got it!"
   else
