@@ -2,7 +2,7 @@
 
 # -- Exit gracefully --
 Signal.trap("INT") {
-  print "bye "
+  print "\nbye\n"
   exit 0
 }
 
@@ -35,9 +35,20 @@ end
 COMMIT_DELIMITER = "XXXCOMMITXXX"
 FIELD_DELIMITER = "|||"
 
-commit_format = ["%an", "%ar", "%B"].join(FIELD_DELIMITER)
+log_command = ""
+if File.directory?(".git")
+  commit_format_git = ["%an", "%ar", "%B"].join(FIELD_DELIMITER)
+  log_command = "git log --no-merges --pretty=\"#{COMMIT_DELIMITER}#{commit_format_git}\" #{input if input}"
+elsif File.directory?(".hg")
+  commit_format_hg = ["{author}", "{date|age}", "{desc}"].join(FIELD_DELIMITER)
+  log_command = "hg log --rev \"(!merge())\" --template \"#{COMMIT_DELIMITER}#{commit_format_hg}\" #{input if input}"
+else
+  puts "No repository found in working directory"
+  exit 1
+end
 
-raw_commits = `git log --no-merges --pretty="#{COMMIT_DELIMITER}#{commit_format}" #{input if input}`.split("#{COMMIT_DELIMITER}")
+puts "Processing commit history..."
+raw_commits = `#{log_command}`.split("#{COMMIT_DELIMITER}")
 commits = []
 raw_commits.each do |c|
   next if c.strip.empty?
