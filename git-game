@@ -1,8 +1,10 @@
 #!/usr/bin/ruby
 
+longest_streak = streak = 0
+
 # -- Exit gracefully --
 Signal.trap("INT") {
-  print "bye "
+  puts "\nLongest streak: #{longest_streak}"
   exit 0
 }
 
@@ -67,7 +69,6 @@ system('clear')
 
 # -- Game loop --
 NUM_CHOICE = 4
-streak = 0
 
 loop do
   commit = commits.shuffle.pop
@@ -107,6 +108,8 @@ loop do
     streak = 0
     puts "Actually, it was #{author}."
   end
+
+  longest_streak = [longest_streak, streak].max
 
   sleep 1
   system('clear')
