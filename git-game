@@ -54,10 +54,16 @@ committers = commits.map { |c| c[:author] }.compact.uniq
 system('clear')
 
 print_header
+
+if commits.empty?
+  puts "Couldn't find any commits :("
+  exit 0
+end
+
 puts "You're playing in a repo with #{commits.size} commits and #{committers.size}"
 puts "distinct committers.\n\n"
 
-committers.each do |committer|
+committers.sort.each do |committer|
   puts committer
 end
 
@@ -67,11 +73,17 @@ gets
 
 system('clear')
 
-# -- Game loop --
 NUM_CHOICE = 4
 
+# -- Game loop --
+commit = commits.shuffle!
 loop do
-  commit = commits.shuffle.pop
+  if commits.empty?
+    puts "Looks like there are no more commits left :("
+    break
+  end
+  commit = commits.pop
+
   message = commit[:message]
   author = commit[:author]
 
