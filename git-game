@@ -7,7 +7,7 @@ longest_streak = streak = 0
 Signal.trap("INT") {
   puts "\nLongest streak: #{longest_streak}"
   committer_stats = committer_stats.select{ |committer,stat| stat[:num_guesses] > 0}
-  committer_stats = committer_stats.sort_by{|committer,stat| (stat[:num_correct]/stat[:num_guesses])}.reverse
+  committer_stats = committer_stats.sort_by{|committer,stat| stat[:num_correct]}.reverse
   puts "\nHow well do you know your teammates?\n" if committer_stats.size > 0
   committer_stats.each do |committer, stat|
     puts "(#{stat[:num_correct]}/#{stat[:num_guesses]}) for #{committer} \n"
