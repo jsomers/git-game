@@ -6,9 +6,11 @@ longest_streak = streak = 0
 # -- Exit gracefully --
 Signal.trap("INT") {
   puts "\nLongest streak: #{longest_streak}"
-  puts "\n\nHow well do you know your teammates?\n"
+  puts "\nHow well do you know your teammates?\n"
+  committer_stats = committer_stats.select{ |committer,stat| stat[:num_correct] > 0}
+  committer_stats = committer_stats.sort_by {|committer,stat| stat[:num_guesses]/stat[:num_correct]}
   committer_stats.each do |committer, stat|
-    puts "For #{committer} you got #{stat[:num_correct]} out of #{stat[:num_guesses]} \n"
+    puts "(#{stat[:num_correct]}/#{stat[:num_guesses]}) for #{committer} \n"
   end
   exit 0
 }
