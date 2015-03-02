@@ -39,7 +39,7 @@ FIELD_DELIMITER = "|||"
 
 commit_format = ["%an", "%ar", "%B"].join(FIELD_DELIMITER)
 
-raw_commits = `git log --no-merges --pretty="#{COMMIT_DELIMITER}#{commit_format}" #{input if input}`.split("#{COMMIT_DELIMITER}")
+raw_commits = `git log --no-merges --pretty="#{COMMIT_DELIMITER}#{commit_format}" #{input if input}`.encode("utf-8", "binary", :undef => :replace).split("#{COMMIT_DELIMITER}")
 commits = []
 raw_commits.each do |c|
   next if c.strip.empty?
