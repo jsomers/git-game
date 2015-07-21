@@ -26,6 +26,14 @@ def print_help
   puts "For more valid options see: http://gitref.org/inspect/)"
 end
 
+def prompt(question)
+  print question
+  answer = gets
+  # answer is nil if the user pressed ^D
+  puts if answer.nil?
+  answer.nil? ? "" : answer.strip
+end
+
 # -- Usage Text --
 if ARGV.count > 0 && (input = ARGV.shift) == 'help'
   print_header
@@ -92,13 +100,10 @@ loop do
     puts "[#{index + 1}] #{name}"
   end
 
-  print "Who wrote it (current streak: #{streak})? "
-
-  guess = gets.strip
+  guess = prompt "Who wrote it (current streak: #{streak})? "
 
   while guess.empty? || !guess.to_i.between?(1, NUM_CHOICE)
-    print "Who wrote it (current streak: #{streak})? "
-    guess = gets.strip
+    guess = prompt "Who wrote it (current streak: #{streak})? "
   end
 
   if choices[guess.to_i - 1] == author
