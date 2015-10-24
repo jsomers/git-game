@@ -40,6 +40,10 @@ FIELD_DELIMITER = "|||"
 commit_format = ["%an", "%ar", "%B"].join(FIELD_DELIMITER)
 
 raw_commits = `git log --no-merges --pretty="#{COMMIT_DELIMITER}#{commit_format}" #{input if input}`.split("#{COMMIT_DELIMITER}")
+if $?.exitstatus != 0
+    exit $?.exitstatus
+end
+
 commits = []
 raw_commits.each do |c|
   next if c.strip.empty?
