@@ -103,7 +103,7 @@ loop do
 
   if choices[guess.to_i - 1] == author
     streak += 1
-    puts "Got it!"
+    puts "Got it! (it was #{author})"
   else
     streak = 0
     puts "Actually, it was #{author}."
