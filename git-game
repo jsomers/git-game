@@ -1,51 +1,52 @@
 #!/usr/bin/ruby
+# frozen_string_literal: true
 
 longest_streak = streak = 0
 
 # -- Exit gracefully --
-Signal.trap("INT") {
+Signal.trap('INT') do
   puts "\nLongest streak: #{longest_streak}"
   exit 0
-}
+end
 
 def print_header
-  puts "----------------------------------------------------------"
-  puts "                      THE GIT GAME                        "
-  puts "----------------------------------------------------------"
-  puts "Welcome! The goal of the git game is to guess committers"
+  puts '----------------------------------------------------------'
+  puts '                      THE GIT GAME                        '
+  puts '----------------------------------------------------------'
+  puts 'Welcome! The goal of the git game is to guess committers'
   puts "based on their commit messages.\n\n"
 end
 
 def print_help
-  puts "----------------------------------------------------------"
-  puts "                          USAGE                           "
-  puts "----------------------------------------------------------"
-  puts "git game [extra git log options]"
-  puts "EX: git game --after={2014-08-08}"
-  puts "(This script already uses --no-merges and --pretty."
-  puts "For more valid options see: http://gitref.org/inspect/)"
+  puts '----------------------------------------------------------'
+  puts '                          USAGE                           '
+  puts '----------------------------------------------------------'
+  puts 'git game [extra git log options]'
+  puts 'EX: git game --after={2014-08-08}'
+  puts '(This script already uses --no-merges and --pretty.'
+  puts 'For more valid options see: http://gitref.org/inspect/)'
 end
 
 # -- Usage Text --
-if ARGV.count > 0 && (input = ARGV.shift) == 'help'
+if ARGV.count.positive? && (input = ARGV.shift) == 'help'
   print_header
   print_help
   exit 0
 end
 
 # -- Parse commits --
-COMMIT_DELIMITER = "XXXCOMMITXXX"
-FIELD_DELIMITER = "|||"
+COMMIT_DELIMITER = 'XXXCOMMITXXX'
+FIELD_DELIMITER = '|||'
 
-commit_format = ["%an", "%ar", "%B"].join(FIELD_DELIMITER)
+commit_format = ['%an', '%ar', '%B'].join(FIELD_DELIMITER)
 
-raw_commits = `git log --no-merges --pretty="#{COMMIT_DELIMITER}#{commit_format}" #{input if input}`.split("#{COMMIT_DELIMITER}")
+raw_commits = `git log --no-merges --pretty="#{COMMIT_DELIMITER}#{commit_format}" #{input}`.split(COMMIT_DELIMITER.to_s)
 commits = []
 raw_commits.each do |c|
   next if c.strip.empty?
 
   fields = c.split(FIELD_DELIMITER)
-  commits << {:author => fields[0], :date => fields[1], :message => fields[2]}
+  commits << { author: fields[0], date: fields[1], message: fields[2] }
 end
 
 committers = commits.map { |c| c[:author] }.compact.uniq
@@ -61,7 +62,7 @@ committers.each do |committer|
   puts committer
 end
 
-puts "Ready? PRESS ENTER TO START PLAYING (Ctrl-C to quit)"
+puts 'Ready? PRESS ENTER TO START PLAYING (Ctrl-C to quit)'
 
 gets
 
@@ -82,7 +83,7 @@ loop do
   puts
 
   choices = committers.sample(NUM_CHOICE)
-  if !choices.include?(author)
+  unless choices.include?(author)
     choices.pop
     choices.push author
   end
@@ -103,7 +104,7 @@ loop do
 
   if choices[guess.to_i - 1] == author
     streak += 1
-    puts "Got it!"
+    puts 'Got it!'
   else
     streak = 0
     puts "Actually, it was #{author}."
