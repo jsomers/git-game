@@ -40,36 +40,20 @@ if ARGV.count.positive?
   end
 end
 
-# -- Parse commits --
-COMMIT_DELIMITER = 'XXXCOMMITXXX'
-FIELD_DELIMITER = ',,,'
+# -- Fetch Repository Info --
+COMMIT_DELIMITER = "\0"
 
-commit_format = ['%aN', '%ar', '%B', ''].join(FIELD_DELIMITER)
-
-raw_commits = `git log --no-merges --pretty=#{COMMIT_DELIMITER}#{commit_format} --shortstat #{input}`
+commit_shas = `git log --no-merges --pretty=%H -z #{input}`
               .split(COMMIT_DELIMITER)
-commits = []
-committers = []
-raw_commits.each do |com|
-  next if com.strip.empty?
-
-  fields = com.split(FIELD_DELIMITER)
-  next if fields.any?(&:empty?)
-
-  committers |= [fields[0]]
-  commits << {
-    author: fields[0],
-    date: fields[1],
-    message: fields[2],
-    stat: fields[3]
-  }
-end
+committers = `git log --pretty=%aN -z`
+             .split(COMMIT_DELIMITER)
+             .uniq
 
 # -- Show welcome message --
 system('clear')
 
 print_header
-puts "You're playing in a repo with #{commits.size} commits and #{committers.size}"
+puts "You're playing in a repo with #{commit_shas.size} commits and #{committers.size}"
 puts "distinct committers.\n\n"
 
 committers.each do |committer|
@@ -86,12 +70,10 @@ system('clear')
 NUM_CHOICE = 4
 
 loop do
-  commit = commits.shuffle.pop
-  author = commit[:author]
+  sha = commit_shas.shuffle.pop
+  author = `git show #{sha} --pretty=%aN --no-patch`
 
-  puts "(#{commit[:date]})\n"
-  puts commit[:message]
-  puts commit[:stat]
+  puts `git show #{sha} --pretty='(%ar)%n%B' --shortstat`
   puts
   puts
 
