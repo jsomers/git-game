@@ -28,28 +28,42 @@ def print_help
 end
 
 # -- Usage Text --
-if ARGV.count.positive? && (input = ARGV.shift) == 'help'
-  print_header
-  print_help
-  exit 0
+input = nil
+if ARGV.count.positive?
+  input = ARGV.shift
+
+  case input
+  when 'help'
+    print_header
+    print_help
+    exit 0
+  end
 end
 
 # -- Parse commits --
 COMMIT_DELIMITER = 'XXXCOMMITXXX'
-FIELD_DELIMITER = '|||'
+FIELD_DELIMITER = ',,,'
 
-commit_format = ['%an', '%ar', '%B'].join(FIELD_DELIMITER)
+commit_format = ['%aN', '%ar', '%B', ''].join(FIELD_DELIMITER)
 
-raw_commits = `git log --no-merges --pretty="#{COMMIT_DELIMITER}#{commit_format}" #{input}`.split(COMMIT_DELIMITER.to_s)
+raw_commits = `git log --no-merges --pretty=#{COMMIT_DELIMITER}#{commit_format} --shortstat #{input}`
+              .split(COMMIT_DELIMITER)
 commits = []
-raw_commits.each do |c|
-  next if c.strip.empty?
+committers = []
+raw_commits.each do |com|
+  next if com.strip.empty?
 
-  fields = c.split(FIELD_DELIMITER)
-  commits << { author: fields[0], date: fields[1], message: fields[2] }
+  fields = com.split(FIELD_DELIMITER)
+  next if fields.any?(&:empty?)
+
+  committers |= [fields[0]]
+  commits << {
+    author: fields[0],
+    date: fields[1],
+    message: fields[2],
+    stat: fields[3]
+  }
 end
-
-committers = commits.map { |c| c[:author] }.compact.uniq
 
 # -- Show welcome message --
 system('clear')
@@ -73,13 +87,12 @@ NUM_CHOICE = 4
 
 loop do
   commit = commits.shuffle.pop
-  message = commit[:message]
   author = commit[:author]
 
-  next if message.nil? || message.empty? || author.nil? || author.empty?
-
   puts "(#{commit[:date]})\n"
-  puts "#{message.strip}\n\n"
+  puts commit[:message]
+  puts commit[:stat]
+  puts
   puts
 
   choices = committers.sample(NUM_CHOICE)
