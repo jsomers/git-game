@@ -41,13 +41,10 @@ if ARGV.count.positive?
 end
 
 # -- Fetch Repository Info --
-COMMIT_DELIMITER = "\0"
-
 commit_shas = `git log --no-merges --pretty=%H -z #{input}`
-              .split(COMMIT_DELIMITER)
-committers = `git log --pretty=%aN -z`
-             .split(COMMIT_DELIMITER)
-             .uniq
+              .split("\0")
+committers = `git log --no-merges --pretty=%aN | sort -u`
+             .split("\n")
 
 # -- Show welcome message --
 system('clear')
@@ -73,18 +70,14 @@ loop do
   sha = commit_shas.shuffle.pop
   author = `git show #{sha} --pretty=%aN --no-patch`
 
-  puts `git show #{sha} --pretty='(%ar)%n%B' --shortstat`
-  puts
-  puts
+  puts `git show #{sha} --pretty='(%ar)%n%B' --shortstat\n\n`
 
-  choices = committers.sample(NUM_CHOICE)
-  unless choices.include?(author)
-    choices.pop
-    choices.push author
-  end
-  choices.shuffle!
+  choices = [author]
+  choices += committers.reject do |name|
+    name == author
+  end.sample(NUM_CHOICE - 1)
 
-  choices.each_with_index do |name, index|
+  choices.shuffle.each_with_index do |name, index|
     puts "[#{index + 1}] #{name}"
   end
 
@@ -92,7 +85,7 @@ loop do
 
   guess = gets.strip
 
-  while guess.empty? || !guess.to_i.between?(1, NUM_CHOICE)
+  until guess.to_i.between?(1, NUM_CHOICE)
     print "Who wrote it (current streak: #{streak})? "
     guess = gets.strip
   end
