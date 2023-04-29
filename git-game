@@ -43,6 +43,7 @@ end
 # -- Fetch Repository Info --
 commit_shas = `git log --no-merges --pretty=%H -z #{input}`
               .split("\0")
+              .shuffle
 committers = `git log --no-merges --pretty=%aN | sort -u`
              .split("\n")
 
@@ -67,8 +68,8 @@ system('clear')
 NUM_CHOICE = 4
 
 loop do
-  sha = commit_shas.shuffle.pop
-  author = `git show #{sha} --pretty=%aN --no-patch`
+  sha = commit_shas.pop
+  author = `git show #{sha} --pretty=%aN --no-patch`.strip
 
   puts `git show #{sha} --pretty='(%ar)%n%B' --shortstat\n\n`
 
