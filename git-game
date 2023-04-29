@@ -10,21 +10,26 @@ Signal.trap('INT') do
 end
 
 def print_header
-  puts '----------------------------------------------------------'
-  puts '                      THE GIT GAME                        '
-  puts '----------------------------------------------------------'
-  puts 'Welcome! The goal of the git game is to guess committers'
-  puts "based on their commit messages.\n\n"
+  puts <<~TXT
+    ----------------------------------------------------------
+                          THE GIT GAME
+    ----------------------------------------------------------
+    Welcome! The goal of the git game is to guess committers
+    based on their commit messages.
+
+  TXT
 end
 
 def print_help
-  puts '----------------------------------------------------------'
-  puts '                          USAGE                           '
-  puts '----------------------------------------------------------'
-  puts 'git game [extra git log options]'
-  puts 'EX: git game --after={2014-08-08}'
-  puts '(This script already uses --no-merges and --pretty.'
-  puts 'For more valid options see: http://gitref.org/inspect/)'
+  puts <<~TXT
+    ----------------------------------------------------------
+                              USAGE
+    ----------------------------------------------------------
+    git game [extra git log options]
+    EX: git game --after={2014-08-08}
+    (This script already uses --no-merges and --pretty.
+    For more valid options see: https://git-scm.com/docs/git-log)
+  TXT
 end
 
 # -- Usage Text --
@@ -33,7 +38,7 @@ if ARGV.count.positive?
   input = ARGV.shift
 
   case input
-  when 'help'
+  when 'help', '--help', '-h'
     print_header
     print_help
     exit 0
@@ -59,7 +64,6 @@ committers.each do |committer|
 end
 
 puts 'Ready? PRESS ENTER TO START PLAYING (Ctrl-C to quit)'
-
 gets
 
 system('clear')
@@ -67,12 +71,11 @@ system('clear')
 # -- Game loop --
 NUM_CHOICE = 4
 
-loop do
-  sha = commit_shas.pop
+commit_shas.each do |sha|
+  puts `git show #{sha} --pretty='(%ar)%n%B' --shortstat`
+  puts "\n\n"
+
   author = `git show #{sha} --pretty=%aN --no-patch`.strip
-
-  puts `git show #{sha} --pretty='(%ar)%n%B' --shortstat\n\n`
-
   choices = [author]
   choices += committers.reject do |name|
     name == author
@@ -82,10 +85,7 @@ loop do
     puts "[#{index + 1}] #{name}"
   end
 
-  print "Who wrote it (current streak: #{streak})? "
-
-  guess = gets.strip
-
+  guess = nil
   until guess.to_i.between?(1, NUM_CHOICE)
     print "Who wrote it (current streak: #{streak})? "
     guess = gets.strip
@@ -104,3 +104,10 @@ loop do
   sleep 1
   system('clear')
 end
+
+puts <<~TXT
+  Congratulations! There are no more commits in this repo!
+
+  Longest streak: #{longest_streak}
+TXT
+exit 0
