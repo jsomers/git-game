@@ -1,6 +1,8 @@
 #!/usr/bin/ruby
 # frozen_string_literal: true
 
+require 'English'
+
 longest_streak = streak = 0
 
 # -- Exit gracefully --
@@ -49,6 +51,7 @@ end
 commit_shas = `git log --no-merges --pretty=%H -z #{input}`
               .split("\0")
               .shuffle
+exit $CHILD_STATUS.exitstatus unless $CHILD_STATUS.success?
 committers = `git log --no-merges --pretty=%aN | sort -u`
              .split("\n")
 
