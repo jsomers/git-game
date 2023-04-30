@@ -54,6 +54,7 @@ commit_shas = `git log --no-merges --pretty=%H -z #{input}`
 exit $CHILD_STATUS.exitstatus unless $CHILD_STATUS.success?
 committers = `git log --no-merges --pretty=%aN | sort -u`
              .split("\n")
+             .map(&:strip)
 
 # -- Show welcome message --
 system('clear')
@@ -83,8 +84,9 @@ commit_shas.each do |sha|
   choices += committers.reject do |name|
     name == author
   end.sample(NUM_CHOICE - 1)
+  choices.shuffle!
 
-  choices.shuffle.each_with_index do |name, index|
+  choices.each_with_index do |name, index|
     puts "[#{index + 1}] #{name}"
   end
 
@@ -104,7 +106,8 @@ commit_shas.each do |sha|
 
   longest_streak = [longest_streak, streak].max
 
-  sleep 1
+  puts "\nEnter to go to next question"
+  gets
   system('clear')
 end
 
