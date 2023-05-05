@@ -4,6 +4,7 @@
 require 'English'
 
 longest_streak = streak = 0
+difficulty = :normal
 
 # -- Exit gracefully --
 Signal.trap('INT') do
@@ -27,25 +28,44 @@ def print_help
     ----------------------------------------------------------
                               USAGE
     ----------------------------------------------------------
-    git game [extra git log options]
+    git game [options]
+
+    Flags:
+      -h, --help      Show this help message
+      --hard          Opt into a challenge (git game classic)
+
+    Extra options can be passed directly to git log:
+
     EX: git game --after={2014-08-08}
     (This script already uses --no-merges and --pretty.
     For more valid options see: https://git-scm.com/docs/git-log)
   TXT
 end
 
-# -- Usage Text --
-input = nil
-if ARGV.count.positive?
-  input = ARGV.shift
+def print_commit_preview(sha, difficulty)
+  details_args = {
+    normal: "--pretty='(%ar)%n%B' --shortstat",
+    hard: "--pretty='(%ar)%n%B' --no-patch"
+  }[difficulty]
 
-  case input
-  when 'help', '--help', '-h'
-    print_header
-    print_help
-    exit 0
-  end
+  puts `git show #{sha} #{details_args}`
+  puts "\n\n"
 end
+
+# -- Command line options --
+used_args = []
+if ARGV.include?('help') ||
+   ARGV.include?('--help') ||
+   ARGV.include?('-h')
+  print_header
+  print_help
+  exit 0
+elsif ARGV.include?('--hard')
+  used_args << '--hard'
+  difficulty = :hard
+end
+input = ARGV.reject { |arg| used_args.include?(arg) }.join(' ')
+ARGV.clear
 
 # -- Fetch Repository Info --
 commit_shas = `git log --no-merges --pretty=%H -z #{input}`
@@ -76,8 +96,7 @@ system('clear')
 NUM_CHOICE = 4
 
 commit_shas.each do |sha|
-  puts `git show #{sha} --pretty='(%ar)%n%B' --shortstat`
-  puts "\n\n"
+  print_commit_preview(sha, difficulty)
 
   author = `git show #{sha} --pretty=%aN --no-patch`.strip
   choices = [author]
