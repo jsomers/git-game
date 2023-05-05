@@ -31,8 +31,8 @@ def print_help
     git game [options]
 
     Flags:
-      -h, --help      Show this help message
-      --hard          Opt into a challenge (git game classic)
+      -h          Show this help message
+      --hard      Opt into a challenge (git game classic)
 
     Extra options can be passed directly to git log:
 
