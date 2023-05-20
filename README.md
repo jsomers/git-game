@@ -8,12 +8,39 @@ In the git game, you guess who made a commit to your team's repo based on their 
 
 The goal is to get the longest streak! (It's harder than you think...)
 
+## Installation
+
+### Homebrew
+```sh
+brew install git-game
+```
+### Download latest release
+
+- [Download the `git-game` executable](https://github.com/jsomers/git-game/releases/latest)
+- Put it somewhere on your PATH (like /usr/local/bin)
+
 ## How do I play?
 
-- [Download the `git-game` executable](https://github.com/jsomers/git-game/releases/tag/1.2)
-- Put it somewhere on your PATH (like /usr/local/bin)
-- Then, in any git repository, run `git game`
-- (If you'd like, you can select a subset of commits, for example, `git game --after={2014-08-08}`. For more options, see [Git - git-log documentation](https://git-scm.com/docs/git-log).)
+In any git repository, run:
+```sh
+git game
+```
+### Difficulty
+
+The game defaults to normal difficulty, try this for a challenge:
+
+```sh
+git game --hard
+```
+
+### Extra options
+
+If you'd like, you can select a subset of commits, for example; after August 8th 2014. Try:
+
+```sh
+git game --after={2014-08-08}
+```
+Most git log options are support. See [Git - git-log documentation](https://git-scm.com/docs/git-log)
 
 ## Requirements
 
