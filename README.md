@@ -40,7 +40,7 @@ If you'd like, you can select a subset of commits, for example; after August 8th
 ```sh
 git game --after={2014-08-08}
 ```
-Most git log options are support. See [Git - git-log documentation](https://git-scm.com/docs/git-log)
+Most git log options are supported. See [Git - git-log documentation](https://git-scm.com/docs/git-log)
 
 ## Requirements
 
