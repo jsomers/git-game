@@ -25,6 +25,14 @@ In any git repository, run:
 ```sh
 git game
 ```
+## Need help?
+
+In any git repository, run:
+```sh
+git game -h
+```
+to display the help message.
+
 ### Difficulty
 
 The game defaults to normal difficulty, try this for a challenge:
